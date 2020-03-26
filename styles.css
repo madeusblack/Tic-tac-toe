@@ -1,0 +1,27 @@
+.cardbox{
+    border:none;
+    background-color: azure;
+}
+#boardcontainer{
+    display:grid;
+    grid-template-columns: 70px 70px 70px;
+    margin-left: 40%;
+    margin-right: 43.7%;
+    grid-template-rows: 70px 70px 70px;
+    grid-gap: 5px;
+    
+    background-color: black;
+
+}
+#title{
+    text-align: center;
+}
+body{
+    background-image: url('plnas.JPG');
+    background-repeat:no-repeat;
+    -webkit-background-size:cover;
+    -moz-background-size:cover;
+    -o-background-size:cover;
+    background-size:cover;
+    background-position:center;
+}
