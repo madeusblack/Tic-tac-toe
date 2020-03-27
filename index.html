@@ -9,7 +9,22 @@
   <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <h1 id="title">Tic Tac toe</h1>
+    <div id="titlecont">
+        <h1 id="title">Tic Tac Toe</h1>
+    </div> 
+    
+    
+    <div id="pNameCont">
+        <label for="Pname">Input a player name:</label><br>
+        <input type="text" placeholder="Bob" id="Pname"><br>
+        <p>Select a Mark:</p>
+        <input type="radio" id="X" name="marksel" value="x" checked>
+        <label for="X">X</label>
+        <input type="radio" id="O" name="marksel" value="o">
+        <label for="O">O</label><br>
+        <button onclick="setplayer()">Start Game</button>
+        <button onclick="checkglobal()">check</button></div>
+        
     <div id="scoreboard"></div>
     <div id="boardcontainer"></div>
     
