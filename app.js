@@ -1,27 +1,29 @@
-var logicalgrid = (function () {    
-    var board = [];
-    mark="blank";
-    var generateboard = function(){
+var board=[]
+let logicalgrid = (function () {    
+    
+    let generateboard = function(){
+        board = [];
+        mark="blank";
         while (board.length<9){
             boarpiece={
                 mark:mark,
                 position:board.length
             }
             board.push(boarpiece)
-        }
+        }       
+
     }
     generateboard()  
     return {
-        board :board
+        generateboard : generateboard,
       }
   }());
-let board=logicalgrid.board
-var actualmark="blank"
-let lastturn="p2"
 
+  var actualmark="blank"
+    let lastturn="p2"
 var displaycontroller = (function () {
     domcont=document.getElementById("boardcontainer");
-    
+  
     var checkDisplay = function(posMark){
         switch (posMark) {
             case "blank":
@@ -46,15 +48,16 @@ var displaycontroller = (function () {
     var myHandler=function (){
         let updateTurn=document.getElementById("actualturn")
         tochange=this.firstChild.id
-        if(this.firstChild.innerHTML!="")
-            {return}
+        if(this.firstChild.innerHTML!=""||player.name==undefined)
+            {
+                return}
         switch (lastturn) {
             case "p1":
                 actualmark=player2.mark;
                 actualname=player2.name;
                 board[tochange].mark=actualmark
                 lastturn="p2"
-                updateTurn.innerHTML="Actual Turn=: "+player.name
+                updateTurn.innerHTML="Actual Turn: "+player.name
                 break;
         
             case "p2":
@@ -62,7 +65,7 @@ var displaycontroller = (function () {
                 actualname=player.name;
                 board[tochange].mark=actualmark
                 lastturn="p1"
-                updateTurn.innerHTML="Actual Turn=: "+player2.name
+                updateTurn.innerHTML="Actual Turn: "+player2.name
                 break;
         }
         displayboard()
@@ -71,16 +74,20 @@ var displaycontroller = (function () {
         
     var displayboard = function(){
         removechilds()
+        console.log("dboard")
         displayedpos=0;
         while (displayedpos<9){
-            let actualmark=board[displayedpos]
             let boardPosCard=document.createElement('div');
             boardPosCard.classList.add('cardbox');
             let boardcheck=document.createElement('h1');
             boardcheck.classList.add('mark');
             boardcheck.setAttribute("id", displayedpos);
             boardPosCard.addEventListener("click",myHandler);
-            boardcheck.innerHTML=checkDisplay(actualmark.mark);
+            if(board[displayedpos].mark!=undefined){
+                boardcheck.innerHTML=checkDisplay(board[displayedpos].mark);
+            }
+
+            console.log(board[displayedpos])
             boardPosCard.appendChild(boardcheck);
             domcont.appendChild(boardPosCard);
             displayedpos++
@@ -88,7 +95,8 @@ var displaycontroller = (function () {
     }
     displayboard();
     return {
-        displayboard: displayboard,}
+        displayboard: displayboard
+    }
         //passed for dimanic redraw
   }());
 
@@ -105,6 +113,8 @@ function Player(name,mark){
 var player=""
 var player2=""
 function setplayers(){
+    logicalgrid.generateboard()
+    displaycontroller.displayboard();
     function getmarkp1(){
         let getter = document.getElementById("X").checked 
         console.log(getter)
@@ -145,9 +155,15 @@ var evaluatormod = (function () {
             if(totalx.length>=3){
                 if(player.mark=="x"){
                     alert( player.name+" is the winner")
+                    logicalgrid.generateboard();
+                    displaycontroller.displayboard();
+
 
                 }if(player2.mark=="x"){
                     alert( player2.name+" is the winner")
+                    logicalgrid.generateboard();
+                    displaycontroller.displayboard();
+
                 }
                 
             }
@@ -156,9 +172,15 @@ var evaluatormod = (function () {
             if(totalo.length>=3){
                 if(player.mark=="o"){
                     alert( player.name+" is the winner")
+                    logicalgrid.generateboard();
+                    displaycontroller.displayboard();
+
 
                 }if(player2.mark=="o"){
                     alert( player2.name+" is the winner")
+                    logicalgrid.generateboard();
+                    displaycontroller.displayboard();
+
                 }
                 
             }
