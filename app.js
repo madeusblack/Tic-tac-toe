@@ -14,57 +14,61 @@ var logicalgrid = (function () {
     return {
         board :board
       }
-  
-  
   }());
 let board=logicalgrid.board
-console.log(board)
 var actualmark="blank"
+let lastturn="p2"
 
 var displaycontroller = (function () {
     domcont=document.getElementById("boardcontainer");
+    
     var checkDisplay = function(posMark){
         switch (posMark) {
-        case "blank":
-            return "" 
-        case "x":
-            return "x"
-        case "o":
-            return "o"
+            case "blank":
+                return "" 
+            case "x":
+                return "x"
+            case "o":
+                return "o"
         }
     }
+    
     var removechilds = function(){
         var checkNodes = document.getElementById("boardcontainer").hasChildNodes();
         if (checkNodes==true){
          let element = document.getElementById("boardcontainer");
-    while (element.firstChild) {
-      element.removeChild(element.firstChild);
+            while (element.firstChild) {
+                element.removeChild(element.firstChild);
+            }
+        }
     }
-}
-    }
+    let actualname=""
     var myHandler=function (){
-        actualmark=player.mark;
-        console.log(actualmark)
+        let updateTurn=document.getElementById("actualturn")
         tochange=this.firstChild.id
-        board[tochange].mark=actualmark
-        console.log(board[tochange.mark])
-        if(actualmark=="x"){
-            console.log("markx")
-            player['mark']="o";
-            console.log(player)
-        }if(actualmark=="o"){
-            console.log("marko")
-            player['mark']="x";
-            console.log(player)
-
+        if(this.firstChild.innerHTML!="")
+            {return}
+        switch (lastturn) {
+            case "p1":
+                actualmark=player2.mark;
+                actualname=player2.name;
+                board[tochange].mark=actualmark
+                lastturn="p2"
+                updateTurn.innerHTML="Actual Turn=: "+player.name
+                break;
+        
+            case "p2":
+                actualmark=player.mark;
+                actualname=player.name;
+                board[tochange].mark=actualmark
+                lastturn="p1"
+                updateTurn.innerHTML="Actual Turn=: "+player2.name
+                break;
         }
         displayboard()
-       
+        evaluatormod.iterate()  
     }
-  
         
-    
-
     var displayboard = function(){
         removechilds()
         displayedpos=0;
@@ -80,17 +84,29 @@ var displaycontroller = (function () {
             boardPosCard.appendChild(boardcheck);
             domcont.appendChild(boardPosCard);
             displayedpos++
-        }console.log("dboard")
+        }
     }
     displayboard();
     return {
         displayboard: displayboard,}
         //passed for dimanic redraw
   }());
-  
-  function Player(){
-    function getmark(){
-        var getter = document.getElementById("X").checked 
+
+function Player(name,mark){
+    
+    var name = name;
+    var mark = mark;  
+    
+    return Object.freeze({
+        name,
+        mark
+    });
+}
+var player=""
+var player2=""
+function setplayers(){
+    function getmarkp1(){
+        let getter = document.getElementById("X").checked 
         console.log(getter)
         if(getter==true){
             return "x"
@@ -98,28 +114,60 @@ var displaycontroller = (function () {
             return "o"
         }
     }
-    var name =document.getElementById("Pname").value;
-    var mark = getmark();
-
+    function getmarkp2(){
+        let getter = getmarkp1()
+        if(getter=="x"){
+            return "o"
+        }else{
+            return "x"
+        }
+    }
+    let pname = document.getElementById("Pname").value
+    let p2name = document.getElementById("P2name").value
     
-    function add() { console.log(name,marksel + " test"); }
-    
-    return Object({
-        add,
-        mark,
-        
-    });
-}
-player=""
-function setplayer(){
-     player = new Player()
-     window.player=player
-
-}
-console.log(player +"test")
-function checkglobal(){
-    actualmark=player.mark
-    console.log(player)
-}
-
+     player = new Player(pname,getmarkp1())
+     player2 = new Player(p2name,getmarkp2())
   
+}
+
+var evaluatormod = (function () {    
+    winpositions=["012","345","678","036","147","258","048","246"]
+    function iterate() {
+    let totalx = []
+    let totalo = []
+    winpositions.forEach( function(valor, indice) {
+        let res=valor.split("");
+        let getmark=""
+        res.forEach(function(value, index){
+            getmark=board[value].mark
+        if(getmark=="x"){
+            totalx.push(getmark)
+            if(totalx.length>=3){
+                if(player.mark=="x"){
+                    alert( player.name+" is the winner")
+
+                }if(player2.mark=="x"){
+                    alert( player2.name+" is the winner")
+                }
+                
+            }
+        }if(getmark=="o"){
+            totalo.push(getmark)
+            if(totalo.length>=3){
+                if(player.mark=="o"){
+                    alert( player.name+" is the winner")
+
+                }if(player2.mark=="o"){
+                    alert( player2.name+" is the winner")
+                }
+                
+            }
+        } 
+    }); totalx=[]
+    totalo=[]  
+    });  
+    }
+   return{
+    iterate:iterate
+   }
+  }());
